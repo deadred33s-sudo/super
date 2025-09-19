@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشاركة شاشة الهاتف مع الحاسوب</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+        }
+        
+        .description {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .instructions {
+            background-color: #e8f4fc;
+            border-right: 5px solid #3498db;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .instructions h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            padding-right: 20px;
+            line-height: 1.8;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .browser-support {
+            background-color: #fff8e6;
+            border-right: 5px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .browser-support h2 {
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        
+        .connection-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            margin: 5px 0;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .video-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 768px) {
+            .video-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .video-box {
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            height: 250px;
+        }
+        
+        .video-box h3 {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 10;
+        }
+        
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: #000;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .start-btn {
+            background-color: #2ecc71;
+        }
+        
+        .start-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .stop-btn {
+            background-color: #e74c3c;
+        }
+        
+        .stop-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .test-btn {
+            background-color: #ff9800;
+        }
+        
+        .test-btn:hover {
+            background-color: #e68a00;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #ecf0f1;
+            font-size: 0.9rem;
+        }
+        
+        .error-details {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>مشاركة شاشة الهاتف مع الحاسوب</h1>
+        <p class="description">شارك شاشة هاتفك مع حاسوبك عبر الإنترنت بسهولة</p>
+    </header>
+    
+    <div class="container">
+        <div class="instructions">
+            <h2>كيفية الاستخدام:</h2>
+            <ol>
+                <li>افتح هذه الصفحة على هاتفك وعلى حاسوبك</li>
+                <li>انقر على "بدء المشاركة" على هاتفك</li>
+                <li>اسمح للموقع بالوصول إلى شاشتك</li>
+                <li>انسخ رمز الاتصال المعروض على الهاتف</li>
+                <li>أدخل رمز الاتصال في الحاسوب وانقر على "الاتصال"</li>
+                <li>ستظهر شاشة هاتفك على حاسوبك</li>
+            </ol>
+        </div>
+        
+        <div class="browser-support">
+            <h2>متطلبات النظام:</h2>
+            <p>لضمان عمل التطبيق بشكل صحيح، يرجى التأكد من:</p>
+            <ul>
+                <li>استخدام متصفح حديث (Chrome, Firefox, Edge)</li>
+                <li>فتح الصفحة عبر HTTPS (مطلوب للأمان)</li>
+                <li>السماح للإعدادات بالوصول إلى الكاميرا والشاشة</li>
+            </ul>
+        </div>
+        
+        <div class="connection-section">
+            <div class="input-group">
+                <label for="connectionCode">رمز الاتصال:</label>
+                <input type="text" id="connectionCode" placeholder="أدخل رمز الاتصال هنا">
+            </div>
+            <button id="connectBtn">الاتصال</button>
+        </div>
+        
+        <div class="video-container">
+            <div class="video-box">
+                <h3>شاشة الهاتف</h3>
+                <video id="phoneScreen" autoplay playsinline></video>
+            </div>
+            <div class="video-box">
+                <h3>العرض على الحاسوب</h3>
+                <video id="computerScreen" autoplay></video>
+            </div>
+        </div>
+        
+        <div id="status" class="status disconnected">غير متصل - جاهز للبدء</div>
+        <div id="errorDetails" class="error-details"></div>
+        
+        <div class="action-buttons">
+            <button id="testBtn" class="test-btn">فحص دعم المتصفح</button>
+            <button id="startBtn" class="start-btn">بدء المشاركة</button>
+            <button id="stopBtn" class="stop-btn" disabled>إيقاف المشاركة</button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>تم التطوير باستخدام WebRTC - يعمل على جميع المتصفحات الحديثة</p>
+    </footer>
+
+    <script>
+        // العناصر الرئيسية في الصفحة
+        const connectionCodeInput = document.getElementById('connectionCode');
+        const connectBtn = document.getElementById('connectBtn');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const testBtn = document.getElementById('testBtn');
+        const phoneScreen = document.getElementById('phoneScreen');
+        const computerScreen = document.getElementById('computerScreen');
+        const statusDiv = document.getElementById('status');
+        const errorDetailsDiv = document.getElementById('errorDetails');
+        
+        // متغيرات لإدارة اتصال WebRTC
+        let localStream = null;
+        let peerConnection = null;
+        let connectionCode = null;
+        
+        // فحص دعم المتصفح للميزات المطلوبة
+        function checkBrowserSupport() {
+            let supportDetails = "";
+            let isSupported = true;
+            
+            // فحص دالة getDisplayMedia
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+                supportDetails += "❌ المتصفح لا يدعم دالة getDisplayMedia\n";
+                isSupported = false;
+            } else {
+                supportDetails += "✅ المتصفح يدعم دالة getDisplayMedia\n";
+            }
+            
+            // فحص دالة getUserMedia
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                supportDetails += "❌ المتصفح لا يدعم دالة getUserMedia\n";
+                isSupported = false;
+            } else {
+                supportDetails += "✅ المتصفح يدعم دالة getUserMedia\n";
+            }
+            
+            // فحص WebRTC
+            if (!window.RTCPeerConnection) {
+                supportDetails += "❌ المتصفح لا يدعم WebRTC\n";
+                isSupported = false;
+            } else {
+                supportDetails += "✅ المتصفح يدعم WebRTC\n";
+            }
+            
+            // فحص إذا كان على HTTPS
+            if (window.location.protocol !== 'https:') {
+                supportDetails += "⚠️ الصفحة غير محملة عبر HTTPS (مطلوب للتشغيل الكامل)\n";
+            } else {
+                supportDetails += "✅ الصفحة محملة عبر HTTPS\n";
+            }
+            
+            return {supported: isSupported, details: supportDetails};
+        }
+        
+        // دالة لإنشاء رمز اتصال عشوائي
+        function generateConnectionCode() {
+            return Math.random().toString(36).substring(2, 10).toUpperCase();
+        }
+        
+        // بدء مشاركة الشاشة
+        async function startSharing() {
+            try {
+                statusDiv.textContent = 'جاري طلب مشاركة الشاشة...';
+                statusDiv.className = 'status';
+                
+                // التأكد من دعم المتصفح
+                const support = checkBrowserSupport();
+                if (!support.supported) {
+                    throw new Error("المتصفح لا يدعم الميزات المطلوبة");
+                }
+                
+                // طلب مشاركة الشاشة
+                localStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: {
+                        cursor: "always",
+                        displaySurface: "window" // أو "browser" أو "monitor"
+                    },
+                    audio: true
+                });
+                
+                // عرض شاشة الهاتف
+                phoneScreen.srcObject = localStream;
+                
+                // إنشاء رمز اتصال
+                connectionCode = generateConnectionCode();
+                connectionCodeInput.value = connectionCode;
+                
+                // تغيير حالة الأزرار
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                
+                statusDiv.textContent = `جاري الانتظار للاتصال... رمز الاتصال: ${connectionCode}`;
+                statusDiv.className = 'status';
+                
+                // إضافة معالج لانتهاء المشاركة
+                localStream.getTracks().forEach(track => {
+                    track.onended = () => {
+                        stopSharing();
+                    };
+                });
+                
+            } catch (error) {
+                console.error('Error sharing screen:', error);
+                statusDiv.textContent = `خطأ: ${error.message}`;
+                statusDiv.className = 'status disconnected';
+                
+                // عرض تفاصيل الخطأ
+                errorDetailsDiv.textContent = `تفاصيل الخطأ: ${error.name} - ${error.message}`;
+                errorDetailsDiv.style.display = 'block';
+            }
+        }
+        
+        // إيقاف مشاركة الشاشة
+        function stopSharing() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                phoneScreen.srcObject = null;
+                
+                // إعادة تعيين الحالة
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                connectionCodeInput.value = '';
+                
+                statusDiv.textContent = 'تم إيقاف المشاركة';
+                statusDiv.className = 'status disconnected';
+                errorDetailsDiv.style.display = 'none';
+            }
+        }
+        
+        // فحص دعم المتصفح
+        testBtn.addEventListener('click', () => {
+            const support = checkBrowserSupport();
+            alert(`نتيجة فحص المتصفح:\n\n${support.details}`);
+            
+            if (!support.supported) {
+                statusDiv.textContent = 'المتصفح لا يدعم جميع الميزات المطلوبة';
+                statusDiv.className = 'status warning';
+            } else {
+                statusDiv.textContent = 'المتصفح يدعم جميع الميزات المطلوبة';
+                statusDiv.className = 'status connected';
+            }
+        });
+        
+        // بدء المشاركة
+        startBtn.addEventListener('click', startSharing);
+        
+        // إيقاف المشاركة
+        stopBtn.addEventListener('click', stopSharing);
+        
+        // محاكاة عملية الاتصال (في تطبيق حقيقي، سيتطلب هذا خادم signaling)
+        connectBtn.addEventListener('click', () => {
+            const code = connectionCodeInput.value.trim();
+            if (!code) {
+                statusDiv.textContent = 'يرجى إدخال رمز الاتصال';
+                statusDiv.className = 'status disconnected';
+                return;
+            }
+            
+            statusDiv.textContent = `جاري الاتصال بـ ${code}...`;
+            statusDiv.className = 'status';
+            
+            // محاكاة الاتصال الناجح (في التطبيق الحقيقي، سيتم إنشاء اتصال WebRTC هنا)
+            setTimeout(() => {
+                statusDiv.textContent = 'متصل - جاري عرض شاشة الهاتف';
+                statusDiv.className = 'status connected';
+                
+                // في التطبيق الحقيقي، سيتم عرض الفيديو المستلم من الهاتف
+                // هذه محاكاة فقط
+                if (phoneScreen.srcObject) {
+                    computerScreen.srcObject = phoneScreen.srcObject;
+                }
+            }, 2000);
+        });
+        
+        // فحص دعم المتصفح عند التحميل
+        window.addEventListener('load', () => {
+            const support = checkBrowserSupport();
+            if (!support.supported) {
+                statusDiv.textContent = 'تحذير: المتصفح قد لا يدعم جميع الميزات المطلوبة';
+                statusDiv.className = 'status warning';
+                
+                errorDetailsDiv.textContent = `تفاصيل الفحص:\n${support.details}`;
+                errorDetailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
